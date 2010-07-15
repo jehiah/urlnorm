@@ -7,6 +7,6 @@ setup(name='urlnorm',
         py_modules=['urlnorm'],
         license='MIT License',
         author='Jehiah Czebotar',
-        author_email='"Jehiah Czebotar" <jehiah@gmail.com>',
+        author_email='jehiah@gmail.com',
         url='http://github.com/jehiah/urlnorm',
         )
