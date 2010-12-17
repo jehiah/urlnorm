@@ -3,20 +3,28 @@ urlnorm.py
 
 Normalize a URL to a standard unicode representation
 
-This will convert to domains to IDN format, lowercase the domain and protocol, properly unescape path, query and fragment component, and collapse redundant path segments.
+urlnorm normalizes a URL by:
+
+  * lowercasing the scheme and hostname
+  * converting the hostname to IDN format
+  * taking out default port if present (e.g., http://www.foo.com:80/)
+  * collapsing the path (./, ../, etc)
+  * removing the last character in the hostname if it is '.'
+  * unquoting any % escaped characters (where possible)
 
 Installation
 ============
 
-pip install urlnorm
+    pip install -U urlnorm
 
 or to install from source
 
-pip install -e git://github.com/jehiah/urlnorm.git#egg=urlnorm
+    pip install -e git://github.com/jehiah/urlnorm.git#egg=urlnorm
 
 Examples
 ========
 
->>> import urlnorm
->>> urlnorm.norm("http://xn--q-bga.com./u/u/../%72/l/")
-u'http://q\xe9.com/u/r/l/'
+    >>> import urlnorm
+    >>> urlnorm.norm("http://xn--q-bga.com./u/u/../%72/l/")
+    u'http://q\xe9.com/u/r/l/'
+

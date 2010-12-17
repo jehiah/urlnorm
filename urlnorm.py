@@ -4,7 +4,7 @@
 """
 urlnorm.py - URL normalisation routines
 
-urlnorm normalises a URL by;
+urlnorm normalizes a URL by:
   * lowercasing the scheme and hostname
   * converting the hostname to IDN format
   * taking out default port if present (e.g., http://www.foo.com:80/)
