@@ -176,7 +176,11 @@ def norm_path(scheme, path):
 def norm_netloc(scheme, netloc):
     if not netloc:
         return netloc
-    userinfo, host, port = _server_authority.match(netloc).groups()
+    match = _server_authority.match(netloc)
+    if not match:
+        raise InvalidUrl('no host in netloc %r' % netloc)
+    
+    userinfo, host, port = match.groups()
     if host[-1] == '.':
         host = host[:-1]
     

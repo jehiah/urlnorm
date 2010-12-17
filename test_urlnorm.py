@@ -57,7 +57,19 @@ def pytest_generate_tests(metafunc):
         }
         for bad, good in tests.items():
             metafunc.addcall(funcargs=dict(bad=bad, good=good))
-        
+
+    elif metafunc.function in [test_invalid_urls]:
+        for url in [
+            'http://http://www.exemple.com/',
+            ]:
+            metafunc.addcall(funcargs=dict(url=url))
+
+def test_invalid_urls(url):
+    try:
+        urlnorm.norm(url)
+    except urlnorm.InvalidUrl:
+        return
+    assert 1 == 0, "this should have raised an InvalidUrl exception"
 
 def test_norms(bad, good):
     new_url = urlnorm.norm(bad)
