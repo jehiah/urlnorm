@@ -101,7 +101,7 @@ _server_authority_schemes = [   'http',
                                 'ftp',
                             ]
 
-qs_unsafe_list = '/?&=;+%'
+qs_unsafe_list = '/?&=;+%#'
 fragment_unsafe_list = ('#',)
 path_unsafe_list = '/?;%+#'
 _hextochr = dict(('%02x' % i, chr(i)) for i in range(256))
