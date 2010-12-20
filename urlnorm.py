@@ -23,7 +23,7 @@ Available functions:
   
  
 CHANGES:
-1.0.1 fix problem unescaping %23 in query string
+1.0.1 fix problem unescaping %23 and %20 in query string
 1.0 - new release
 0.94 - idna handling, unescaping querystring, fragment, add ws + wss ports
 0.92 - unknown schemes now pass the port through silently
@@ -103,9 +103,9 @@ _server_authority_schemes = [   'http',
                                 'ftp',
                             ]
 
-qs_unsafe_list = '/?&=;+%#'
-fragment_unsafe_list = ('#',)
-path_unsafe_list = '/?;%+#'
+qs_unsafe_list = ' /?&=;+%#'
+fragment_unsafe_list = ' #'
+path_unsafe_list = ' /?;%+#'
 _hextochr = dict(('%02x' % i, chr(i)) for i in range(256))
 _hextochr.update(('%02X' % i, chr(i)) for i in range(256))
 
