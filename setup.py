@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(name='urlnorm',
-        version='1.0',
+        version='1.0.1',
         long_description=open("./README.txt", "r").read(),
         description="Normalize a URL to a standard unicode encoding",
         py_modules=['urlnorm'],

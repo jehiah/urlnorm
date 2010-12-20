@@ -23,6 +23,8 @@ Available functions:
   
  
 CHANGES:
+1.0.1 fix problem unescaping %23 in query string
+1.0 - new release
 0.94 - idna handling, unescaping querystring, fragment, add ws + wss ports
 0.92 - unknown schemes now pass the port through silently
 0.91 - general cleanup
@@ -53,7 +55,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-__version__ = "1.0"
+__version__ = "1.0.1"
 
 from urlparse import urlparse, urlunparse
 from string import lower
