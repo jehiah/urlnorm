@@ -56,9 +56,9 @@ def pytest_generate_tests(metafunc):
             'http://ja.wikipedia.org/wiki/%E3%82%AD%E3%83%A3%E3%82%BF%E3%83%94%E3%83%A9%E3%83%BC%E3%82%B8%E3%83%A3%E3%83%91%E3%83%B3': 'http://ja.wikipedia.org/wiki/\xe3\x82\xad\xe3\x83\xa3\xe3\x82\xbf\xe3\x83\x94\xe3\x83\xa9\xe3\x83\xbc\xe3\x82\xb8\xe3\x83\xa3\xe3\x83\x91\xe3\x83\xb3'.decode('utf8'),
             
             # check that %23 (#) is not escaped where it shouldn't be
-            'http://test.example/?p=%23val#test-%23-val': 'http://test.example/?p=%23val#test-%23-val',
-            # check that %20 is not unescaped to ' '
-            'http://test.example/?p=%20val%20' : 'http://test.example/?p=%20val%20',
+            'http://test.example/?p=%23val#test-%23-val%25': 'http://test.example/?p=%23val#test-%23-val%25',
+            # check that %20 or %25 is not unescaped to ' ' or %
+            'http://test.example/%25/?p=%20val%20%25' : 'http://test.example/%25/?p=%20val%20%25',
         }
         for bad, good in tests.items():
             metafunc.addcall(funcargs=dict(bad=bad, good=good))

@@ -105,7 +105,7 @@ _server_authority_schemes = [   'http',
                             ]
 
 qs_unsafe_list = ' /?&=;+%#'
-fragment_unsafe_list = ' #'
+fragment_unsafe_list = ' +%#'
 path_unsafe_list = ' /?;%+#'
 _hextochr = dict(('%02x' % i, chr(i)) for i in range(256))
 _hextochr.update(('%02X' % i, chr(i)) for i in range(256))
