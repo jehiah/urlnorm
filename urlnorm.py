@@ -11,7 +11,7 @@ urlnorm normalizes a URL by:
   * collapsing the path (./, ../, //, etc)
   * removing the last character in the hostname if it is '.'
   * unescaping any percent escape sequences (where possible)
-  * upercase percent escape (ie: %3f => %#F)
+  * upercase percent escape (ie: %3f => %3F)
   * converts spaces, and %20 to '+'
   * converts ip encoded as an integer to dotted quad notation 
 
