@@ -62,7 +62,7 @@ SOFTWARE.
 """
 
 # also update in setup.py
-__version__ = "1.1"
+__version__ = "1.1.1"
 
 from urlparse import urlparse, urlunparse
 from string import lower
@@ -72,7 +72,7 @@ class InvalidUrl(Exception):
     pass
 
 _collapse = re.compile('([^/]+/\.\./?|/\./|//|/\.$|/\.\.$)')
-_server_authority = re.compile('^(?:([^\@]+)\@)?([^\:]+)(?:\:(.+))?$')
+_server_authority = re.compile('^(?:([^\@]+)\@)?([^\:\[\]]+|\[[a-fA-F0-9\:\.]+\])(?:\:(.*?))?$')
 _default_port = {   'http': '80',
                     'itms': '80',
                     'ws': '80',
@@ -198,6 +198,7 @@ def norm_netloc(scheme, netloc):
         raise InvalidUrl('no host in netloc %r' % netloc)
     
     userinfo, host, port = match.groups()
+    # catch a few common errors:
     if host.isdigit():
         try:
             host = int2ip(int(host))
@@ -205,6 +206,10 @@ def norm_netloc(scheme, netloc):
             raise InvalidUrl('host %r does not escape to a valid ip' % host)
     if host[-1] == '.':
         host = host[:-1]
+    
+    # bracket check is for ipv6 hosts
+    if '.' not in host and not (host[0] == '[' and host[-1] == ']'):
+        raise InvalidUrl('host %r is not valid' % host)
     
     authority = lower(host)
     if 'xn--' in authority:

@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 # also update in urlnorm.py
-version = '1.1'
+version = '1.1.1'
 
 setup(name='urlnorm',
         version=version,

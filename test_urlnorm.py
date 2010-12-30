@@ -9,6 +9,7 @@ def pytest_generate_tests(metafunc):
         """ test suite; some taken from RFC1808. Run with py.test"""
         tests = {
             'http://1113982867/':            'http://66.102.7.147/', # ip dword encoding
+            'http://www.thedraymin.co.uk:/main/?p=308': 'http://www.thedraymin.co.uk/main/?p=308', # empty port
             'http://www.foo.com:80/foo':     'http://www.foo.com/foo',
             'http://www.foo.com:8000/foo':   'http://www.foo.com:8000/foo',
             'http://www.foo.com./foo/bar.html': 'http://www.foo.com/foo/bar.html',
@@ -43,6 +44,14 @@ def pytest_generate_tests(metafunc):
             "http://test.domain/I%C3%B1t%C3%ABrn%C3%A2ti%C3%B4n%EF%BF%BDliz%C3%A6ti%C3%B8n" : "http://test.domain/I\xc3\xb1t\xc3\xabrn\xc3\xa2ti\xc3\xb4n\xef\xbf\xbdliz\xc3\xa6ti\xc3\xb8n",
             # check that spaces are collated to '+'
             "http://test.example/path/with a%20space/" : "http://test.example/path/with+a+space/",
+            "http://[2001:db8:1f70::999:de8:7648:6e8]/test" : "http://[2001:db8:1f70::999:de8:7648:6e8]/test", #ipv6 address
+            "http://[::ffff:192.168.1.1]/test" : "http://[::ffff:192.168.1.1]/test", # ipv4 address in ipv6 notation
+            "http://[::ffff:192.168.1.1]:80/test" : "http://[::ffff:192.168.1.1]/test", # ipv4 address in ipv6 notation
+            "htTps://[::fFff:192.168.1.1]:443/test" : "https://[::ffff:192.168.1.1]/test", # ipv4 address in ipv6 notation
+
+            # python 2.5 urlparse doesn't handle unknown protocols, so skipping this for now
+            #"itms://itunes.apple.com/us/app/touch-pets-cats/id379475816?mt=8#23161525,,1293732683083,260430,tw" : "itms://itunes.apple.com/us/app/touch-pets-cats/id379475816?mt=8#23161525,,1293732683083,260430,tw", #can handle itms://
+
         }
         for bad, good in tests.items():
             metafunc.addcall(funcargs=dict(bad=bad, good=good))
@@ -61,6 +70,7 @@ def pytest_generate_tests(metafunc):
             '-',
             'asdf',
             'HTTP://4294967297/test', # one more than max ip > int
+            'http://[img]http://i790.photobucket.com/albums/yy185/zack-32009/jordan.jpg[/IMG]',
             ]:
             metafunc.addcall(funcargs=dict(url=url))
     elif metafunc.function == test_norm_path:
