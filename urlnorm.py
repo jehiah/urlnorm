@@ -12,7 +12,7 @@ urlnorm normalizes a URL by:
   * removing the last character in the hostname if it is '.'
   * unescaping any percent escape sequences (where possible)
   * upercase percent escape (ie: %3f => %3F)
-  * converts spaces, and %20 to '+'
+  * converts spaces to %20
   * converts ip encoded as an integer to dotted quad notation 
 
 Available functions:
@@ -26,6 +26,7 @@ Available functions:
 
 
 CHANGES:
+1.1.2 - leave leave %20 as %20, collate ' ' to %20, leave '+' as '+'
 1.1 - collate %20 and ' ' to '+'
 1.1 - fix unescaping of parameters
 1.1 - added int2ip
@@ -62,7 +63,7 @@ SOFTWARE.
 """
 
 # also update in setup.py
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 from urlparse import urlparse, urlunparse
 from string import lower
@@ -147,7 +148,7 @@ def norm(url):
     url = _unicode(url) # operate on unicode strings
     url_tuple = urlparse(url)
     normalized_tuple = norm_tuple(*url_tuple)
-    return urlunparse(normalized_tuple).replace(' ','+').replace('%20','+')
+    return urlunparse(normalized_tuple).replace(' ','%20')
 
 def norm_tuple(scheme, authority, path, parameters, query, fragment):
     """given individual url components, return its normalized form"""
