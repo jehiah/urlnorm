@@ -15,14 +15,11 @@ urlnorm normalizes a URL by:
 Installation
 ============
 
-    pip install -U urlnorm
+    pip install urlnorm
 
-or to install from source
 
-    pip install -e git://github.com/jehiah/urlnorm.git#egg=urlnorm
-
-Examples
-========
+Example
+=======
 
     >>> import urlnorm
     >>> urlnorm.norm("http://xn--q-bga.com./u/u/../%72/l/")
