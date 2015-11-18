@@ -88,7 +88,7 @@ _default_port = {   'http': '80',
                     'telnet': '23',
                     'prospero': '191',
                 }
-_relative_schemes = [   'http',
+_relative_schemes = set(['http',
                         'https',
                         'ws',
                         'wss',
@@ -100,12 +100,12 @@ _relative_schemes = [   'http',
                         'ftp',
                         'file',
                         ''
-                    ]
+                    ])
 
-params_unsafe_list = ' ?=+%#;'
-qs_unsafe_list = ' ?&=+%#'
-fragment_unsafe_list = ' +%#'
-path_unsafe_list = ' /?;%+#'
+params_unsafe_list = set(' ?=+%#;')
+qs_unsafe_list = set(' ?&=+%#')
+fragment_unsafe_list = set(' +%#')
+path_unsafe_list = set(' /?;%+#')
 _hextochr = dict(('%02x' % i, chr(i)) for i in range(256))
 _hextochr.update(('%02X' % i, chr(i)) for i in range(256))
 
