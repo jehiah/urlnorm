@@ -69,38 +69,39 @@ from urlparse import urlparse, urlunparse
 from string import lower
 import re
 
+
 class InvalidUrl(Exception):
     pass
 
 _collapse = re.compile('([^/]+/\.\./?|/\./|//|/\.$|/\.\.$)')
 _server_authority = re.compile('^(?:([^\@]+)\@)?([^\:\[\]]+|\[[a-fA-F0-9\:\.]+\])(?:\:(.*?))?$')
-_default_port = {   'http': '80',
-                    'itms': '80',
-                    'ws': '80',
-                    'https': '443',
-                    'wss': '443',
-                    'gopher': '70',
-                    'news': '119',
-                    'snews': '563',
-                    'nntp': '119',
-                    'snntp': '563',
-                    'ftp': '21',
-                    'telnet': '23',
-                    'prospero': '191',
-                }
+_default_port = {'http': '80',
+                 'itms': '80',
+                 'ws': '80',
+                 'https': '443',
+                 'wss': '443',
+                 'gopher': '70',
+                 'news': '119',
+                 'snews': '563',
+                 'nntp': '119',
+                 'snntp': '563',
+                 'ftp': '21',
+                 'telnet': '23',
+                 'prospero': '191',
+                 }
 _relative_schemes = set(['http',
-                        'https',
-                        'ws',
-                        'wss',
-                        'itms',
-                        'news',
-                        'snews',
-                        'nntp',
-                        'snntp',
-                        'ftp',
-                        'file',
-                        ''
-                    ])
+                         'https',
+                         'ws',
+                         'wss',
+                         'itms',
+                         'news',
+                         'snews',
+                         'nntp',
+                         'snntp',
+                         'ftp',
+                         'file',
+                         ''
+                         ])
 
 params_unsafe_list = set(' ?=+%#;')
 qs_unsafe_list = set(' ?&=+%#')
@@ -109,17 +110,22 @@ path_unsafe_list = set(' /?;%+#')
 _hextochr = dict(('%02x' % i, chr(i)) for i in range(256))
 _hextochr.update(('%02X' % i, chr(i)) for i in range(256))
 
+
 def unquote_path(s):
     return unquote_safe(s, path_unsafe_list)
+
 
 def unquote_params(s):
     return unquote_safe(s, params_unsafe_list)
 
+
 def unquote_qs(s):
     return unquote_safe(s, qs_unsafe_list)
 
+
 def unquote_fragment(s):
     return unquote_safe(s, fragment_unsafe_list)
+
 
 def unquote_safe(s, unsafe_list):
     """unquote percent escaped string except for percent escape sequences that are in unsafe_list"""
@@ -143,12 +149,14 @@ def unquote_safe(s, unsafe_list):
     o = "".join(res)
     return _unicode(o)
 
+
 def norm(url):
     """given a string URL, return its normalized/unicode form"""
-    url = _unicode(url) # operate on unicode strings
+    url = _unicode(url)  # operate on unicode strings
     url_tuple = urlparse(url)
     normalized_tuple = norm_tuple(*url_tuple)
-    return urlunparse(normalized_tuple).replace(' ','%20')
+    return urlunparse(normalized_tuple).replace(' ', '%20')
+
 
 def norm_tuple(scheme, authority, path, parameters, query, fragment):
     """given individual url components, return its normalized form"""
@@ -161,11 +169,12 @@ def norm_tuple(scheme, authority, path, parameters, query, fragment):
     path = norm_path(scheme, path)
     # TODO: put query in sorted order; or at least group parameters together
     # Note that some websites use positional parameters or the name part of a query so this would break the internet
-    # query = urlencode(parse_qs(query, keep_blank_values=1), doseq=1) 
+    # query = urlencode(parse_qs(query, keep_blank_values=1), doseq=1)
     parameters = unquote_params(parameters)
     query = unquote_qs(query)
     fragment = unquote_fragment(fragment)
     return (scheme, authority, path, parameters, query, fragment)
+
 
 def norm_path(scheme, path):
     if scheme in _relative_schemes:
@@ -180,7 +189,9 @@ def norm_path(scheme, path):
         return '/'
     return path
 
-MAX_IP=0xffffffffL
+MAX_IP = 0xffffffffL
+
+
 def int2ip(ipnum):
     assert isinstance(ipnum, int)
     if MAX_IP < ipnum or ipnum < 0:
@@ -190,14 +201,15 @@ def int2ip(ipnum):
     ip3 = ipnum >> 8 & 0xFF
     ip4 = ipnum & 0xFF
     return "%d.%d.%d.%d" % (ip1, ip2, ip3, ip4)
-    
+
+
 def norm_netloc(scheme, netloc):
     if not netloc:
         return netloc
     match = _server_authority.match(netloc)
     if not match:
         raise InvalidUrl('no host in netloc %r' % netloc)
-    
+
     userinfo, host, port = match.groups()
     # catch a few common errors:
     if host.isdigit():
@@ -207,16 +219,16 @@ def norm_netloc(scheme, netloc):
             raise InvalidUrl('host %r does not escape to a valid ip' % host)
     if host[-1] == '.':
         host = host[:-1]
-    
+
     # bracket check is for ipv6 hosts
     if '.' not in host and not (host[0] == '[' and host[-1] == ']'):
         raise InvalidUrl('host %r is not valid' % host)
-    
+
     authority = lower(host)
     if 'xn--' in authority:
         subdomains = [_idn(subdomain) for subdomain in authority.split('.')]
         authority = '.'.join(subdomains)
-        
+
     if userinfo:
         authority = "%s@%s" % (userinfo, authority)
     if port and port != _default_port.get(scheme, None):
