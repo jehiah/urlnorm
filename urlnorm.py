@@ -73,7 +73,6 @@ import re
 class InvalidUrl(Exception):
     pass
 
-_collapse = re.compile('([^/]+/\.\./?|/\./|//|/\.$|/\.\.$)')
 _server_authority = re.compile('^(?:([^\@]+)\@)?([^\:\[\]]+|\[[a-fA-F0-9\:\.]+\])(?:\:(.*?))?$')
 _default_port = {'http': '80',
                  'itms': '80',
@@ -178,12 +177,26 @@ def norm_tuple(scheme, authority, path, parameters, query, fragment):
 
 def norm_path(scheme, path):
     if scheme in _relative_schemes:
-        last_path = path
-        while 1:
-            path = _collapse.sub('/', path, 1)
-            if last_path == path:
-                break
-            last_path = path
+        # resolve `/../` and `/./` and `//` components in path as appropriate
+        i = 0
+        parts = []
+        start = 0
+        while i < len(path):
+            if path[i] == "/" or i == len(path) - 1:
+                chunk = path[start:i+1]
+                start = i + 1
+                if chunk in ["", "/", ".", "./"]:
+                    # do nothing
+                    pass
+                elif chunk in ["..", "../"]:
+                    if len(parts):
+                        parts = parts[:len(parts)-1]
+                    else:
+                        parts.append(chunk)
+                else:
+                    parts.append(chunk)
+            i+=1
+        path = "/"+ ("".join(parts))
     path = unquote_path(path)
     if not path:
         return '/'
