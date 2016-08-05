@@ -26,6 +26,7 @@ Available functions:
 
 
 CHANGES:
+1.1.4 - unescape " " in params, query string, and fragments
 1.1.3 - don't escape " " in path
 1.1.2 - leave %20 as %20, collate ' ' to %20, leave '+' as '+'
 1.1 - collate %20 and ' ' to '+'
@@ -64,7 +65,7 @@ SOFTWARE.
 """
 
 # also update in setup.py
-__version__ = "1.1.2"
+__version__ = "1.1.4"
 
 from urlparse import urlparse, urlunparse
 from string import lower
@@ -103,9 +104,9 @@ _relative_schemes = set(['http',
                          ''
                          ])
 
-params_unsafe_list = set(' ?=+%#;')
-qs_unsafe_list = set(' ?&=+%#')
-fragment_unsafe_list = set(' +%#')
+params_unsafe_list = set('?=+%#;')
+qs_unsafe_list = set('?&=+%#')
+fragment_unsafe_list = set('+%#')
 path_unsafe_list = set('/?;%+#')
 _hextochr = dict(('%02x' % i, chr(i)) for i in range(256))
 _hextochr.update(('%02X' % i, chr(i)) for i in range(256))
