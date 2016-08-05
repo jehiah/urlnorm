@@ -26,7 +26,8 @@ Available functions:
 
 
 CHANGES:
-1.1.2 - leave leave %20 as %20, collate ' ' to %20, leave '+' as '+'
+1.1.3 - don't escape " " in path
+1.1.2 - leave %20 as %20, collate ' ' to %20, leave '+' as '+'
 1.1 - collate %20 and ' ' to '+'
 1.1 - fix unescaping of parameters
 1.1 - added int2ip
@@ -105,7 +106,7 @@ _relative_schemes = set(['http',
 params_unsafe_list = set(' ?=+%#;')
 qs_unsafe_list = set(' ?&=+%#')
 fragment_unsafe_list = set(' +%#')
-path_unsafe_list = set(' /?;%+#')
+path_unsafe_list = set('/?;%+#')
 _hextochr = dict(('%02x' % i, chr(i)) for i in range(256))
 _hextochr.update(('%02X' % i, chr(i)) for i in range(256))
 
@@ -154,8 +155,7 @@ def norm(url):
     url = _unicode(url)  # operate on unicode strings
     url_tuple = urlparse(url)
     normalized_tuple = norm_tuple(*url_tuple)
-    return urlunparse(normalized_tuple).replace(' ', '%20')
-
+    return urlunparse(normalized_tuple)
 
 def norm_tuple(scheme, authority, path, parameters, query, fragment):
     """given individual url components, return its normalized form"""
