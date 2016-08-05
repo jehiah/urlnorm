@@ -39,13 +39,13 @@ def pytest_generate_tests(metafunc):
             
             # check that %23 (#) is not escaped where it shouldn't be
             'http://test.example/?p=%23val#test-%23-val%25': 'http://test.example/?p=%23val#test-%23-val%25',
-            # check that %20 or %25 is not unescaped to ' ' or %
-            'http://test.example/%25/?p=%20val%20%25' : 'http://test.example/%25/?p=%20val%20%25',
+            # check that %25 is not unescaped to %
+            'http://test.example/%25/?p=val%25ue' : 'http://test.example/%25/?p=val%25ue',
             "http://test.domain/I%C3%B1t%C3%ABrn%C3%A2ti%C3%B4n%EF%BF%BDliz%C3%A6ti%C3%B8n" : "http://test.domain/I\xc3\xb1t\xc3\xabrn\xc3\xa2ti\xc3\xb4n\xef\xbf\xbdliz\xc3\xa6ti\xc3\xb8n",
-            # check that spaces in paths are not escaped
-            'http://test.example/abcde%20def' : 'http://test.example/abcde def',
+            # check that %20 in paths, params, query strings, and fragments are unescaped
+            'http://test.example/abcde%20def?que%20ry=str%20ing#frag%20ment' : 'http://test.example/abcde def?que ry=str ing#frag ment',
             # check that spaces are collated to '+'
-            "http://test.example/path/with a%20space+/" : "http://test.example/path/with a space+/",  # spaces in apths are ok
+            "http://test.example/path;par%20ams/with a%20space+/" : "http://test.example/path;par ams/with a space+/",  # spaces in paths are ok
             "http://[2001:db8:1f70::999:de8:7648:6e8]/test" : "http://[2001:db8:1f70::999:de8:7648:6e8]/test", #ipv6 address
             "http://[::ffff:192.168.1.1]/test" : "http://[::ffff:192.168.1.1]/test", # ipv4 address in ipv6 notation
             "http://[::ffff:192.168.1.1]:80/test" : "http://[::ffff:192.168.1.1]/test", # ipv4 address in ipv6 notation
